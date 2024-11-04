@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound Recorder with Tone.js</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.35/Tone.min.js"></script>
+</head>
+<body>
+  <center><h2>Notalar</h2></center>
+  <hr>
+  <div id="buttonContainer"></div>
+  <hr>
+  <center>
+    <h2>Kontrol Paneli</h2>
+  <button id="startRecording">Kayıtı Başlat</button>
+  <button id="stopRecording">Kayıtı Durdur</button>
+</center>
+  <script>
+    const soundFiles = [
+      "guitar-chord-down-sweep_120bpm_C_minor.wav",
+      "guitar-double-notes-soft-2_120bpm_C_minor.wav",
+      "guitar-double-notes-soft_120bpm_C_minor.wav",
+      "guitar-loop-double-chords-progression_120bpm_C_minor.wav",
+      "guitar-loop-progression-10_120bpm_C_minor.wav",
+      "guitar-loop-progression-11_120bpm_C_minor.wav",
+      "guitar-loop-progression-12_120bpm_C_minor.wav",
+      "guitar-loop-progression-2_120bpm_C_minor.wav",
+      "guitar-loop-progression-3_120bpm_C_minor.wav",
+      "guitar-loop-progression-4_120bpm_C_minor.wav",
+      "guitar-loop-progression-5_120bpm_C_minor.wav",
+      "guitar-loop-progression-6_120bpm_C_minor.wav",
+      "guitar-loop-progression-7_120bpm_C_minor.wav",
+      "guitar-loop-progression-8_120bpm_C_minor.wav",
+      "guitar-loop-progression-9_120bpm_C_minor.wav",
+      "guitar-loop-progression-soft_120bpm_C_minor.wav",
+      "guitar-loop-progression_120bpm_C_minor.wav",
+      "guitar-loop-stabs_120bpm_C_minor.wav",
+      "guitar-short-loop-notes-2_120bpm_C_minor.wav",
+      "guitar-short-loop-notes-3_120bpm_C_minor.wav",
+      "guitar-short-loop-notes-4_120bpm_C_minor.wav",
+      "guitar-short-loop-notes_120bpm_C_minor.wav",
+      "guitar-short-loop-smooth_120bpm_C_minor.wav",
+      "guitar-single-note-b-2_120bpm_C_minor.wav",
+      "guitar-single-note-b_120bpm_C_minor.wav",
+      "guitar-single-note-c-2_120bpm_C_minor.wav",
+      "guitar-single-note-c_120bpm_C_minor.wav",
+      "guitar-single-note-d-sharp-2_120bpm_C_minor.wav",
+      "guitar-single-note-d-sharp_120bpm_C_minor.wav",
+      "guitar-single-note-d_120bpm_C_minor.wav",
+      "guitar-single-note-down-sweep_120bpm_C_minor.wav",
+      "guitar-single-note-f-sharp_120bpm_C_minor.wav",
+      "guitar-single-note-g-sharp-2_120bpm_C_minor.wav",
+      "guitar-single-note-g-sharp-3_120bpm_C_minor.wav",
+      "guitar-single-note-g-sharp_120bpm_C_minor.wav",
+      "guitar-single-note-g_120bpm_C_minor.wav",
+      "guitar-single-note-long-release-2_120bpm_C_minor.wav",
+      "guitar-single-note-long-release_120bpm_C_minor.wav"
+    ];
+
+    const buttonContainer = document.getElementById("buttonContainer");
+    let recording = false;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let audioStarted = false; 
+    const players = {}; 
+
+    const audioContext = Tone.context;
+    const dest = audioContext.createMediaStreamDestination();
+    mediaRecorder = new MediaRecorder(dest.stream);
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: "audio/wav" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = "recording.wav";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      recordedChunks = [];
+    };
+
+    soundFiles.forEach(file => {
+      const button = document.createElement("button");
+      button.innerText = file;
+      button.addEventListener("click", () => playSound(file));
+      buttonContainer.appendChild(button);
+
+      players[file] = new Tone.Player(`sounds/${file}`, () => {
+        console.log(`${file} loaded`);
+      }).toDestination().connect(dest);
+    });
+
+    async function playSound(file) {
+      if (!audioStarted) {
+        await Tone.start(); 
+        audioStarted = true; 
+      }
+      
+      if (players[file].loaded) {
+        players[file].start();
+      } else {
+        console.log(`Loading ${file}... Please wait.`);
+      }
+    }
+
+    function stopAllSounds() {
+      
+      Object.values(players).forEach(player => player.stop());
+    }
+
+    document.getElementById("startRecording").addEventListener("click", async () => {
+      if (!audioStarted) {
+        await Tone.start(); 
+        audioStarted = true; 
+      }
+      recording = true;
+      recordedChunks = [];
+      stopAllSounds(); 
+      mediaRecorder.start();
+    });
+
+    document.getElementById("stopRecording").addEventListener("click", () => {
+      if (!recording) return;
+      recording = false;
+      stopAllSounds(); 
+      mediaRecorder.stop();
+    });
+  </script>
+</body>
+</html>
