@@ -1,37 +1,69 @@
 body {
-    background: linear-gradient(to bottom right, #00ff99, #00ccff);
+    background: linear-gradient(135deg, #00ff99, #00ccff);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+.rows{
+    width: 100%;
+}
+.row{
+    float: right;
+    height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+.row button{
+    margin: 20px;
+    width: 200px;
+    display: block;
 }
 
 #buttonContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 15px;
-    margin: 20px;
+    width: 100%;
+    gap: 25px;
+    float: right;
 }
 
-#buttonContainer button {
-    width: 300px;
+h1, h2{
+    font-family: "Honk", system-ui;
+    font-size: 54px;
+    font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "MORF" 15,
+    "SHLN" 50;
+}
+
+.rows button {
+    width: 200px;
+    height: 50px;
     border: none;
     border-radius: 15px;
     padding: 15px;
     background-color: #198754;
     color: white;
     font-size: 16px;
+    margin: 5px;
+    float: left;
 }
 
-/* Eğer #imageWrapper varsa, düğmeler resmin yanında dizilir */
+
 #imageWrapper {
     display: inline-block;
     margin-right: 20px;
 }
 
+
 img {
     width: 650px;
     height: auto;
-    display: block;
-    margin-left: 250px;
-    bottom: 0px;
+    margin-left: 50px;
+    top: 350px;
+    float: left;
+    position: absolute;
 }
 .control-panel{
     font-size: 36px;
@@ -49,12 +81,12 @@ img {
     font-size: 16px;
 }
 
-/* Stop Recording butonuna özel stil */
+
 #stopRecording {
     background-color: #dc3545;
 }
 
-/* 768px altında düzenleme */
+
 @media (max-width: 768px) {
     #buttonContainer {
         justify-content: center;
@@ -73,7 +105,7 @@ img {
     }
 }
 
-/* 480px altında düzenleme */
+
 @media (max-width: 480px) {
     #buttonContainer {
         flex-direction: column;

@@ -5,20 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sound Recorder with Tone.js</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Honk&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.35/Tone.min.js"></script>
   </head>
   <body>
     <center><h1>Studio Sinan</h1></center>
-    <center><h2>Notalar</h2></center>
+    <center><h2>Sounds</h2></center>
 
+    <img src="character.png" alt="Guitarist" />
+
+    <div class="rows">
+      <div id="row1" class="row"></div>
+      <div id="row2" class="row"></div>
+      <div id="row3" class="row"></div>
+      <div id="row4" class="row"></div>
+      <div id="row5" class="row"></div>
+      <div id="row6" class="row"></div>
+      <div id="row7" class="row"></div>
+      <div id="row8" class="row"></div>
+    </div>
+
+    <!--
     <div id="buttonContainer"></div>
     <div id="imageWrapper">
       <img src="character.png" alt="Guitarist" />
     </div>
-
+-->
     <div class="control-panel">
-      <button id="startRecording">Kayıtı Başlat</button>
-      <button id="stopRecording">Kayıtı Durdur</button>
+      <button id="startRecording">Start Record</button>
+      <button id="stopRecording">Stop Record</button>
     </div>
 
     <center></center>
@@ -94,17 +114,47 @@
         recordedChunks = [];
       };
 
-      soundFiles.forEach((file) => {
-        const button = document.createElement("button");
-        button.innerText = file;
-        button.addEventListener("click", () => playSound(file));
-        buttonContainer.appendChild(button);
+      const rows = [
+        { id: "row1", buttonCount: 6 },
+        { id: "row2", buttonCount: 5 },
+        { id: "row3", buttonCount: 4 },
+        { id: "row4", buttonCount: 3 },
+        { id: "row5", buttonCount: 4 },
+        { id: "row6", buttonCount: 4 },
+        { id: "row7", buttonCount: 5 },
+        { id: "row8", buttonCount: 7 },
+      ];
 
-        players[file] = new Tone.Player(`sounds/${file}`, () => {
-          console.log(`${file} loaded`);
-        })
-          .toDestination()
-          .connect(dest);
+      let soundIndex = 0; 
+
+      rows.forEach((row) => {
+        const rowElement = document.getElementById(row.id);
+
+        for (let i = 0; i < row.buttonCount; i++) {
+          
+          if (soundIndex >= soundFiles.length) break;
+
+          
+          const file = soundFiles[soundIndex];
+          const displayName = file
+            .replace("guitar-", "")
+            .replace("_120bpm_C_minor.wav", "");
+
+          
+          const button = document.createElement("button");
+          button.innerText = displayName;
+          button.addEventListener("click", () => playSound(file));
+          rowElement.appendChild(button); 
+
+          
+          players[file] = new Tone.Player(`sounds/${file}`, () => {
+            console.log(`${file} loaded`);
+          })
+            .toDestination()
+            .connect(dest);
+
+          soundIndex++;
+        }
       });
 
       async function playSound(file) {
