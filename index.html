@@ -169,7 +169,8 @@
           const file = soundFiles[soundIndex];
           const displayName = file
             .replace("guitar-", "")
-            .replace("_120bpm_C_minor.wav", "");
+            .replace("_120bpm_C_minor.wav", "")
+            .replaceAll("-", " ");
 
           const button = document.createElement("button");
           button.innerText = displayName;
