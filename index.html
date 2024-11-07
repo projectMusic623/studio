@@ -14,31 +14,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.35/Tone.min.js"></script>
   </head>
   <body>
-    <center><h1>Studio Sinan</h1></center>
-    <center><h2>Sounds</h2></center>
-
-    <img src="character.png" alt="Guitarist" />
-
-    <div class="rows">
-      <div id="row1" class="row"></div>
-      <div id="row2" class="row"></div>
-      <div id="row3" class="row"></div>
-      <div id="row4" class="row"></div>
-      <div id="row5" class="row"></div>
-      <div id="row6" class="row"></div>
-      <div id="row7" class="row"></div>
-      <div id="row8" class="row"></div>
+    <div id="loading-screen">
+      <h2>Sesler Yükleniyor...</h2>
+      <div id="progress-container">
+        <div id="progress-bar"></div>
+        <span id="progress-text">0%</span>
+      </div>
     </div>
 
-    <!--
+    <div id="main-content" style="display: none">
+      <center><h1>Studio Sinan</h1></center>
+      <center><h2>Sounds</h2></center>
+      <center>
+        <div class="page">
+          <img src="character.png" alt="Guitarist" />
+
+          <div class="rows">
+            <div id="row1" class="row"></div>
+            <div id="row2" class="row"></div>
+            <div id="row3" class="row"></div>
+            <div id="row4" class="row"></div>
+            <div id="row5" class="row"></div>
+            <div id="row6" class="row"></div>
+            <div id="row7" class="row"></div>
+            <div id="row8" class="row"></div>
+          </div>
+        </div>
+      </center>
+      <!--
     <div id="buttonContainer"></div>
     <div id="imageWrapper">
       <img src="character.png" alt="Guitarist" />
     </div>
 -->
-    <div class="control-panel">
-      <button id="startRecording">Start Record</button>
-      <button id="stopRecording">Stop Record</button>
+      <div class="control-panel">
+        <button id="startRecording">Start Record</button>
+        <button id="stopRecording">Stop Record</button>
+      </div>
     </div>
 
     <center></center>
@@ -91,6 +103,13 @@
       let audioStarted = false;
       const players = {};
 
+      const progressBar = document.getElementById("progress-bar");
+      const progressText = document.getElementById("progress-text");
+      const loadingScreen = document.getElementById("loading-screen");
+      const mainContent = document.getElementById("main-content");
+      const totalFiles = soundFiles.length;
+      let loadedFiles = 0;
+
       const audioContext = Tone.context;
       const dest = audioContext.createMediaStreamDestination();
       mediaRecorder = new MediaRecorder(dest.stream);
@@ -125,30 +144,41 @@
         { id: "row8", buttonCount: 7 },
       ];
 
-      let soundIndex = 0; 
+      function updateProgress() {
+        loadedFiles++;
+        const progressPercent = Math.floor((loadedFiles / totalFiles) * 100);
+        progressBar.style.width = `${progressPercent}%`;
+        progressText.innerText = `${progressPercent}%`;
+
+        if (loadedFiles === totalFiles) {
+          setTimeout(() => {
+            loadingScreen.style.display = "none";
+            mainContent.style.display = "block";
+          }, 500);
+        }
+      }
+
+      let soundIndex = 0;
 
       rows.forEach((row) => {
         const rowElement = document.getElementById(row.id);
 
         for (let i = 0; i < row.buttonCount; i++) {
-          
           if (soundIndex >= soundFiles.length) break;
 
-          
           const file = soundFiles[soundIndex];
           const displayName = file
             .replace("guitar-", "")
             .replace("_120bpm_C_minor.wav", "");
 
-          
           const button = document.createElement("button");
           button.innerText = displayName;
           button.addEventListener("click", () => playSound(file));
-          rowElement.appendChild(button); 
+          rowElement.appendChild(button);
 
-          
           players[file] = new Tone.Player(`sounds/${file}`, () => {
             console.log(`${file} loaded`);
+            updateProgress();
           })
             .toDestination()
             .connect(dest);
