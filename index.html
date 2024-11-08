@@ -217,32 +217,31 @@
       let soundIndex = 0;
 
       rows.forEach((row) => {
-        const rowElement = document.getElementById(row.id);
+    const rowElement = document.getElementById(row.id);
 
-        for (let i = 0; i < row.buttonCount; i++) {
-          if (soundIndex >= soundFiles.length) break;
+    for (let i = 0; i < row.buttonCount; i++) {
+        if (soundIndex >= soundFiles.length) break;
 
-          const file = soundFiles[soundIndex];
-          const displayName = file
+        const file = soundFiles[soundIndex];
+        const displayName = file
             .replace("guitar-", "")
             .replace("_120bpm_C_minor.wav", "")
             .replaceAll("-", " ");
 
-          const button = document.createElement("button");
-          button.innerText = displayName;
-          button.addEventListener("click", () => playSound(file));
-          rowElement.appendChild(button);
+        const button = document.createElement("button");
+        button.innerText = displayName;
+        button.addEventListener("click", () => playSound(file));
+        rowElement.appendChild(button);
 
-          players[file] = new Tone.Player(`sounds/${file}`, () => {
+        // Tone.Player ile ses dosyasını yükle ve ilerlemeyi güncelle
+        players[file] = new Tone.Player(`sounds/${file}`, () => {
             console.log(`${file} loaded`);
             updateProgress();
-          })
-            .toDestination()
-            .connect(dest);
+        }).toDestination();
 
-          soundIndex++;
-        }
-      });
+        soundIndex++;
+    }
+});
 
       async function playSound(file) {
         if (!audioStarted) {
