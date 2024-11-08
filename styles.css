@@ -38,24 +38,40 @@ body {
   }
   
   #progress-text {
-    position: absolute;
+    position: block;
     width: 100%;
     color: white;
     top: 0;
     line-height: 30px;
-  }
-.page{
+}
+.page {
+    width: 100%;
     display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Resim ve butonları yukarı hizalamak için */
+    gap: 20px; /* Resim ve butonlar arasındaki boşluk */
 }
-.rows{
+
+img {
+    width: 600px; /* Resmin genişliğini ihtiyaca göre ayarlayın */
+    height: auto;
+    margin: 0;
+    margin-right: -650px;
+    position: relative;
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
     width: 100%;
 }
-.row{
-    float: right;
-    height: 100px;
-    width: 100%;
+
+.row {
     display: flex;
     justify-content: right;
+    gap: 15px; 
+    margin-bottom: 10px;
+    width: 100%;
 }
 .row button{
     margin: 20px;
@@ -100,19 +116,10 @@ h1, h2{
 }
 
 
-img {
-    width: 650px;
-    height: auto;
-    margin-right: 50px;
-    top: 350px;
-    float: right;
-    right: 700px;
-    position: absolute;
-}
 .control-panel{
     font-size: 36px;
     float: right;
-    margin-right: 450px;
+    margin-right: 40%;
     margin-top: 200px;
 }
 .control-panel button{
@@ -131,10 +138,7 @@ img {
 }
 @media (max-width: 1400px){
     img {
-        margin-left: 50px;
-        top: 350px;
         float: right;
-        position: absolute;
     }
 }
 
@@ -144,7 +148,7 @@ img {
     }
 
     .rows button {
-        width: 50%; 
+        width: 25%; 
         height: 40px;
         font-size: 14px;
         padding: 10px;
@@ -153,7 +157,7 @@ img {
 
     .row {
         flex-direction: row; 
-        justify-content: left;
+        justify-content: right;
         flex-wrap: wrap;
     }
 
@@ -203,10 +207,14 @@ img {
         padding: 10px;
         margin: 5px 0;
     }
-
+    .row:first-child,
+    .row:last-child {
+        width: 100%;
+    }
     .row {
         flex-direction: column; /* Butonların dikey olarak sıralanması */
         align-items: center;
+     
     }
 
     img {
