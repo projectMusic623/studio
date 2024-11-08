@@ -80,16 +80,17 @@ body {
 
 @media (max-width: 768px) {
     .grid-container {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
     .center-image {
         grid-column: 1 / span 2;
         grid-row: 3 / span 5;
         max-width: 300px;
+        height: auto;
     }
     .grid-container button{
-        width: 100px;
-        font-size: auto;
+        width: 125px;
+        font-size: 12px;
     }
 }
 
