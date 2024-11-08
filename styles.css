@@ -26,11 +26,11 @@ body {
     grid-column: 1 / span 2;
     grid-row: 5 / span 5;
     width: 100%;
-    max-width: 300px;
+    max-width: 600px;
 }
 
 .grid-container button {
-    width: 100px;
+    width: 200px;
     height: 40px;
     border: none;
     border-radius: 8px;
