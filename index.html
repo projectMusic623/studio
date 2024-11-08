@@ -168,36 +168,6 @@
         });
       }
 
-      function updateLayout(rows) {
-        const rowsContainer = document.querySelector(".rows");
-        rowsContainer.innerHTML = ""; // Eski düzeni temizle
-
-        let buttonIndex = 0;
-
-        rows.forEach((row) => {
-          const rowElement = document.createElement("div");
-          rowElement.id = row.id;
-          rowElement.className = "row";
-          rowsContainer.appendChild(rowElement);
-
-          for (let i = 0; i < row.buttonCount; i++) {
-            if (buttonIndex >= buttons.length) break;
-            rowElement.appendChild(buttons[buttonIndex]);
-            buttonIndex++;
-          }
-        });
-      }
-
-      function handleResize() {
-        const breakpoint = 768;
-        const screenWidth = window.innerWidth;
-        const selectedRows =
-          screenWidth <= breakpoint ? rowsResponsive : rowsDefault;
-        updateLayout(selectedRows);
-      }
-      loadButtons();
-      handleResize();
-
       window.addEventListener("resize", handleResize);
 
       function updateProgress() {
