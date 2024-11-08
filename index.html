@@ -184,8 +184,13 @@
 
       let soundIndex = 0;
 
-      rows.forEach((row) => {
+rows.forEach((row) => {
     const rowElement = document.getElementById(row.id);
+
+    if (!rowElement) {
+        console.error(`Element with id ${row.id} not found in DOM.`);
+        return;
+    }
 
     for (let i = 0; i < row.buttonCount; i++) {
         if (soundIndex >= soundFiles.length) break;
@@ -204,7 +209,11 @@
         // Tone.Player ile ses dosyasını yükle ve ilerlemeyi güncelle
         players[file] = new Tone.Player(`sounds/${file}`, () => {
             console.log(`${file} loaded`);
-            updateProgress();
+            if (typeof updateProgress === "function") {
+                updateProgress();
+            } else {
+                console.warn("updateProgress function not found.");
+            }
         }).toDestination();
 
         soundIndex++;
