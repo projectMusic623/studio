@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.35/Tone.min.js"></script>
   </head>
   <body>
-    <div id="loading-screen">
+    <div id="loading-screen" style="display: none">
       <h2>Sesler Yükleniyor...</h2>
       <div id="progress-container">
         <div id="progress-bar"></div>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div id="main-content" style="display: none">
+    <div id="main-content">
       <center><h1>Studio Sinan</h1></center>
       <center><h2>Sounds</h2></center>
       <center>
@@ -100,6 +100,7 @@
       let recording = false;
       let mediaRecorder;
       let recordedChunks = [];
+      const buttons = [];
       let audioStarted = false;
       const players = {};
 
@@ -133,7 +134,7 @@
         recordedChunks = [];
       };
 
-      const rows = [
+      const rowsDefault = [
         { id: "row1", buttonCount: 6 },
         { id: "row2", buttonCount: 5 },
         { id: "row3", buttonCount: 4 },
@@ -143,6 +144,66 @@
         { id: "row7", buttonCount: 5 },
         { id: "row8", buttonCount: 7 },
       ];
+
+      const rowsResponsive = [
+        { id: "row1", buttonCount: 3 },
+        { id: "row2", buttonCount: 2 },
+        { id: "row3", buttonCount: 4 },
+        { id: "row4", buttonCount: 5 },
+        { id: "row5", buttonCount: 6 },
+        { id: "row6", buttonCount: 7 },
+        { id: "row7", buttonCount: 8 },
+        { id: "row8", buttonCount: 2 },
+      ];
+
+      function loadButtons() {
+        let soundIndex = 0;
+
+        soundFiles.forEach((file) => {
+          const displayName = file
+            .replace("guitar-", "")
+            .replace("_120bpm_C_minor.wav", "");
+
+          const button = document.createElement("button");
+          button.innerText = displayName;
+          button.addEventListener("click", () => playSound(file));
+
+          // Buttonu listeye ekleyip rows içinde sakla
+          buttons.push(button);
+        });
+      }
+
+      function updateLayout(rows) {
+        const rowsContainer = document.querySelector(".rows");
+        rowsContainer.innerHTML = ""; // Eski düzeni temizle
+
+        let buttonIndex = 0;
+
+        rows.forEach((row) => {
+          const rowElement = document.createElement("div");
+          rowElement.id = row.id;
+          rowElement.className = "row";
+          rowsContainer.appendChild(rowElement);
+
+          for (let i = 0; i < row.buttonCount; i++) {
+            if (buttonIndex >= buttons.length) break;
+            rowElement.appendChild(buttons[buttonIndex]);
+            buttonIndex++;
+          }
+        });
+      }
+
+      function handleResize() {
+        const breakpoint = 768;
+        const screenWidth = window.innerWidth;
+        const selectedRows =
+          screenWidth <= breakpoint ? rowsResponsive : rowsDefault;
+        updateLayout(selectedRows);
+      }
+      loadButtons();
+      handleResize();
+
+      window.addEventListener("resize", handleResize);
 
       function updateProgress() {
         loadedFiles++;
