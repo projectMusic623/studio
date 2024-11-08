@@ -87,6 +87,9 @@ body {
         grid-row: 3 / span 5;
         max-width: 300px;
     }
+    .grid-container button{
+        width: 100px;
+    }
 }
 
 #loading-screen {
