@@ -28,7 +28,7 @@
             <h2>Sounds</h2>
             <div class="grid-container">
                 <img src="character.png" alt="Guitarist" class="center-image">
-                <div id="buttonContainer" class="grid-buttons"></div>
+                
             </div>
             <div class="control-panel">
                 <button id="startRecording">Start Record</button>
@@ -184,18 +184,12 @@
 
       let soundIndex = 0;
 
-rows.forEach((row) => {
-    const rowElement = document.getElementById(row.id);
+      const gridContainer = document.getElementById("grid-container");
 
-    if (!rowElement) {
-        console.error(`Element with id ${row.id} not found in DOM.`);
-        return;
-    }
-
-    for (let i = 0; i < row.buttonCount; i++) {
-        if (soundIndex >= soundFiles.length) break;
-
-        const file = soundFiles[soundIndex];
+if (!gridContainer) {
+    console.error("Element with id 'grid-container' not found in DOM.");
+} else {
+    soundFiles.forEach((file, index) => {
         const displayName = file
             .replace("guitar-", "")
             .replace("_120bpm_C_minor.wav", "")
@@ -204,7 +198,7 @@ rows.forEach((row) => {
         const button = document.createElement("button");
         button.innerText = displayName;
         button.addEventListener("click", () => playSound(file));
-        rowElement.appendChild(button);
+        gridContainer.appendChild(button);
 
         // Tone.Player ile ses dosyasını yükle ve ilerlemeyi güncelle
         players[file] = new Tone.Player(`sounds/${file}`, () => {
@@ -215,10 +209,8 @@ rows.forEach((row) => {
                 console.warn("updateProgress function not found.");
             }
         }).toDestination();
-
-        soundIndex++;
-    }
-});
+    });
+}
 
       async function playSound(file) {
         if (!audioStarted) {
