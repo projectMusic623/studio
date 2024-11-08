@@ -80,7 +80,7 @@ body {
 
 @media (max-width: 768px) {
     .grid-container {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
     .center-image {
         grid-column: 1 / span 2;
