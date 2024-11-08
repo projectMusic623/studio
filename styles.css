@@ -71,7 +71,7 @@ img {
     justify-content: right;
     gap: 15px; 
     margin-bottom: 10px;
-    width: 100%;
+    width: auto;
 }
 .row button{
     margin: 20px;
