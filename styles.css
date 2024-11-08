@@ -29,7 +29,7 @@ body {
     max-width: 300px;
 }
 
-.grid-buttons button {
+.grid-container button {
     width: 100px;
     height: 40px;
     border: none;
